@@ -3,7 +3,7 @@ import scipy.io.wavfile
 samplerate, data = scipy.io.wavfile.read("sample.wav")
 
 N = 4*samplerate
-x = scipy.fft(x[:N])
+x = scipy.fft(data[:N])
 
 gain = 20*scipy.log10(scipy.absolute(x))
 
