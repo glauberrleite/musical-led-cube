@@ -1,2 +1,2 @@
-# musical-led-cube
-A RGB LED Cube that follows the music
+# Musical LED Cube
+A RGB LED Cube that follows the music through its audio spectrum.
