@@ -1,17 +1,24 @@
 import scipy.io.wavfile
 import matplotlib.pyplot as pyplot
 
-samplerate, data = scipy.io.wavfile.read("sample.wav")
 
-N = 4*samplerate
-x = scipy.fft(data[:N])
+class Spectrum(sample):
+    def __init__(self):
+        self.samplerate, self.data = scipy.io.wavefile.read(sample)
 
-gain = 20*scipy.log10(scipy.absolute(x))
+    def plot(self):
+        N = 4 * self.samplerate
+        x = scipy.fft(self.data[:N])
+        gain = 20 * scipy.log10(scipy.absolute(x))
+        f = scipy.linspace(0, samplerate, N, endpoint=False)
+        pyplot.plot(f, gain)
+        pyplot.xlim(0, 5000)
+        pyplot.show()
 
-f = scipy.linspace(0, samplerate, N, endpoint=False)
 
-pyplot.plot(f, gain)
+def main():
+    sample = Spectrum("sample.wav")
+    sample.plot()
 
-pyplot.xlim(0, 5000)
-
-pyplot.show()
+if __name__ == '_main__':
+    main()
