@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python playSample.py &
-python plotSpectrum.py
+python plotSpectrum.py &
+python playSample.py
