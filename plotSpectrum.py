@@ -1,9 +1,45 @@
 import scipy.io.wavfile
 import matplotlib.pyplot as pyplot
+import matplotlib.animation
 from scipy.fftpack import fft
 import math as math
 import numpy as numpy
 
+# Reading audio file and collecting its relevant info
+samplerate, data = scipy.io.wavfile.read("sample.wav")
+duration = len(data)/samplerate
+
+# Setting STEP for the number of seconds for delay
+# and n for the corresponding number of frames in data array
+STEP = 1
+N = STEP * samplerate
+
+# Preparing graph
+fig = pyplot.figure()
+ax = pyplot.axes(xlim=(0, 5000), ylim=(75, 175))
+line, = ax.plot([], [])
+
+# Setting frequency axis
+freq = scipy.linspace(0, samplerate, N, endpoint=False)
+
+# Defining animation function where i is the frame
+def animate(i):
+    start = int(round(i * samplerate))
+    end = int(round((i + STEP) * samplerate))
+
+    # Applying Fast Fourier Transform
+    fourier = scipy.fft(data[start:end])
+
+    # Calculating gain to work in dB
+    gain = 20*scipy.log10(scipy.absolute(fourier))
+
+    # Building gain/frequency plot for this frame
+    line.set_data(freq, gain)
+
+    return line,
+
+
+anim = matplotlib.animation.FuncAnimation(fig, animate, frames=int(round(duration/STEP)), interval=(STEP * 1000), blit=True)
 
 class Spectrum():
     def __init__(self, sample):
@@ -25,63 +61,6 @@ class Spectrum():
         d = len(c)/2 #get the real signal symmetry
         pyplot.plot(abs(c[:(d-1)]), 'r')
         pyplot.show()
-
-    def plotChannels(self):
-        sound = self.data
-        sound = sound / (2.**15) #convert sound array to float pt. values
-        sound1 = sound[:,0] #left channel
-        sound2 = sound[:,1] #right channel
-
-        num1 = len(sound1)
-        fourierLeft = fft(sound1)
-
-        num2 = len(sound2)
-        fourierRight = fft(sound2)
-
-        num1UniquePts = math.ceil((num1 + 1) / 2.0)
-        fourierLeft = fourierLeft[0:int(num1UniquePts)]
-        fourierLeft = abs(fourierLeft)
-
-        num2UniquePts = math.ceil((num2 + 1)/2.0)
-        fourierRight = fourierRight[0:int(num2UniquePts)]
-        fourierRight = abs(fourierRight)
-
-        ''' Left Channel '''
-        fourierLeft = fourierLeft / float(num1)
-        fourierLeft = fourierLeft**2
-
-        if num1 % 2 > 0:  # we've got odd number of points fft
-            fourierLeft[1:len(fourierLeft)] = fourierLeft[1:len(fourierLeft)] * 2
-        else:
-            fourierLeft[1:len(fourierLeft) - 1] = fourierLeft[1:len(fourierLeft) - 1] * 2  # we've got even number of points fft
-
-        freqArray = numpy.arange(0, num1UniquePts, 1.0) * (self.sampleRate / num1);
-        pyplot.plot(freqArray / 1000, 10 * scipy.log10(fourierLeft), color='k')
-        pyplot.xlabel('LeftChannel_Frequency (kHz)')
-        pyplot.ylabel('LeftChannel_Power (dB)')
-        pyplot.show()
-
-        '''
-        Right Channel
-        '''
-        fourierRight = fourierRight / float(num2)  # scale by the number of points so that
-        # the magnitude does not depend on the length
-        # of the signal or on its sampling frequency
-        fourierRight = fourierRight ** 2  # square it to get the power
-
-        # multiply by two (see technical document for details)
-        # odd nfft excludes Nyquist point
-        if num2 % 2 > 0:  # we've got odd number of points fft
-            fourierRight[1:len(fourierRight)] = fourierRight[1:len(fourierRight)] * 2
-        else:
-            fourierRight[1:len(fourierRight) - 1] = fourierRight[1:len(fourierRight) - 1] * 2  # we've got even number of points fft
-
-        freqArray2 = numpy.arange(0, num2UniquePts, 1.0) * (self.sampleRate / num2);
-        pyplot.plot(freqArray2 / 1000, 10 * scipy.log10(fourierRight), color='k')
-        pyplot.xlabel('RightChannel_Frequency (kHz)')
-        pyplot.ylabel('RightChannel_Power (dB)')
-        pyplot.show()
-
 
 def main():
     print("Drawing sample...")

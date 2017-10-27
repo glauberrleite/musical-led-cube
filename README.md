@@ -6,3 +6,4 @@ A RGB LED Cube that follows the music through its audio spectrum.
 * scipy
 * numpy
 * matplotlib
+* pyaudio
