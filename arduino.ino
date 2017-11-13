@@ -1,3 +1,9 @@
+int r[4] = {0,3,6,A5};
+int b[4] = {1,4,7,A4};
+int g[4] = {2,5,8,A3};
+int ground[4]= {12,11,10,9};
+int level[4] = {13,A2,A1,A0};
+/*
 int r1 = 0;
 int b1 = 1;
 int g1 = 2;
@@ -10,6 +16,7 @@ int g3 = 8;
 int r4 = A5;
 int b4 = A4;
 int g4 = A3;
+
 int ground1 = 12;
 int ground2 = 11;
 int ground3 = 10;
@@ -18,9 +25,11 @@ int level1 = 13;
 int level2 = A2;
 int level3 = A1;
 int level4 = A0;
+*/
 
 void setup()
 {
+  /*
   pinMode(r1, OUTPUT);
   pinMode(b1, OUTPUT);
   pinMode(g1, OUTPUT);
@@ -41,9 +50,19 @@ void setup()
   pinMode(level2, OUTPUT);
   pinMode(level3, OUTPUT);
   pinMode(level4, OUTPUT);
+  */
+  int i =0;
+  for(i=0;i<4;i++){
+    pinMode(r[0], OUTPUT);
+    pinMode(g[0], OUTPUT);
+    pinMode(b[0], OUTPUT);
+    pinMode(ground[0], OUTPUT);
+    pinMode(level[0], OUTPUT);
+  }
 }
 
-void setColumnColor(int column, int r, int g, int b) {
+void setColumnColor(int column, int rr, int gg, int bb) {
+ /*
   switch(column) {
    case 1:
     digitalWrite(r1, r);
@@ -66,10 +85,15 @@ void setColumnColor(int column, int r, int g, int b) {
     digitalWrite(b4, b);
     return;    
   }
+  */
+    digitalWrite(r[column], rr);
+    digitalWrite(g[column], gg);
+    digitalWrite(b[column], bb);
 }
 
-void setLevel(int level, int state) {
-  switch(level) {
+void setLevel(int levell, int state) {
+  /*
+  switch(levell) {
    case 1:
     digitalWrite(level1, state);
     return;
@@ -83,9 +107,12 @@ void setLevel(int level, int state) {
     digitalWrite(level4, state);
     return;    
   }
+  */
+  digitalWrite(level[levell],state);
 }
 
 void setRow(int row, int state) {
+  /*
   switch(row) {
    case 1:
     digitalWrite(ground1, state);
@@ -100,9 +127,12 @@ void setRow(int row, int state) {
     digitalWrite(ground4, state);
     return;    
   }
+  */
+  digitalWrite(ground[row],state);
 }
-void alternateLevel(int level) {
-  switch(level) {
+void alternateLevel(int levell) {
+  /*
+  switch(levell) {
      case 1:
       setLevel(1,HIGH);
       setLevel(2,LOW);
@@ -128,6 +158,16 @@ void alternateLevel(int level) {
       setLevel(4,HIGH);
       return;    
     }
+    */
+   int i = 0;
+   for(int i =0;i<4;i++){
+    if(i == levell){
+      setLevel(level[i],HIGH);
+    }
+    else{
+    setLevel(level[i],LOW);
+   }
+   }
 }
 
 void step1() {  
@@ -796,7 +836,7 @@ void step() {
 
 void loop()
 {
-  while(true) {  	
+  while(true) {    
     step();
   }
 }
